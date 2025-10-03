@@ -1,5 +1,4 @@
-from pypdf import PdfReader, PdfWriter
-
+from PyPDF2 import PdfReader, PdfMerger
 
 def extract_information(pdf_path):
     """
@@ -10,7 +9,7 @@ def extract_information(pdf_path):
         information = pdf.metadata
         number_of_pages = len(pdf.pages)
 
-    txt = f"""
+    txt = f"""\n\n
     Information about {pdf_path}:
 
     Author: {information.author}
@@ -19,24 +18,23 @@ def extract_information(pdf_path):
     Subject: {information.subject}
     Title: {information.title}
     Number of pages: {number_of_pages}
-    """
+    \n\n"""
 
     print(txt)
     return information
+
 
 def merge_pdfs(paths, output):
     """
     Merge multiple PDF files into a single PDF file.
     """
-    pdf_writer = PdfWriter()
+    merger = PdfMerger()
 
     for path in paths:
-        pdf_reader = PdfReader(path)
-        for page in range(len(pdf_reader.pages)):
-            pdf_writer.add_page(pdf_reader.pages[page])
-    
-    with open(output, 'wb') as out:
-        pdf_writer.write(out)
+        merger.append(path)
+
+    merger.write(output)
+    merger.close()
 
     print(f"Merged PDF saved as {output} successfully.")
 

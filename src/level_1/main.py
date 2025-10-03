@@ -1,27 +1,45 @@
-from pypdf import PdfReader
+import src.level_1.tools.pdf_tools as pdf_tools
 
 
-def extract_information(pdf_path):
-    with open(pdf_path, 'rb') as f:
-        pdf = PdfReader(f)
-        information = pdf.metadata
-        number_of_pages = len(pdf.pages)
+def show_file_information():
+    path = input("Enter the path to a PDF file (show file metadata): ").strip()
+    try:
+        pdf_tools.extract_information(path)
+    except Exception as e:
+        print(f"[ERROR](show_file_information)--> {e}")
 
-    txt = f"""
-    Information about {pdf_path}:
+def merge_pdfs():
+    paths = []
+    while True:
+        path = input("Enter the path to a PDF file (or 'done' to finish): ")
+        if path.lower() == 'done':
+            break
+        paths.append(path)
 
-    Author: {information.author}
-    Creator: {information.creator}
-    Producer: {information.producer}
-    Subject: {information.subject}
-    Title: {information.title}
-    Number of pages: {number_of_pages}
-    """
+    try:
+        pdf_tools.merge_pdfs(paths, output='src/level_1/assets/merged.pdf')
+    except Exception as e:
+        print(f"[ERROR](merge_pdfs)--> {e}")
 
-    print(txt)
-    return information
+def main():
+    while True:
+        print("\n********** PDF Tools **********\n")
+        print("1. Show PDF file information")
+        print("2. Merge PDF files")
+        print("3. Exit")
+
+        choice = input("Enter your choice (1/2/3): ")
+
+        if choice == '1':
+            show_file_information()
+        elif choice == '2':
+            merge_pdfs()
+        elif choice == '3':
+            print("\n++++++++++++ Exiting the program ++++++++++++")
+            break
+        else:
+            print("Invalid choice. Please try again.")
 
 
 if __name__ == '__main__':
-    path = 'src/level_1/assets/ResumeNimaZare_Python.pdf'
-    extract_information(path)
+    main()
