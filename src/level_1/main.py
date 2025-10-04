@@ -1,10 +1,12 @@
-import src.level_1.tools.pdf_tools as pdf_tools
-
+from tools.pdf_tools import(
+    extract_information,
+    merge_pdfs
+)
 
 def show_file_information():
     path = input("Enter the path to a PDF file (show file metadata): ").strip()
     try:
-        pdf_tools.extract_information(path)
+        extract_information(path)
     except Exception as e:
         print(f"[ERROR](show_file_information)--> {e}")
 
@@ -17,7 +19,7 @@ def merge_pdfs():
         paths.append(path)
 
     try:
-        pdf_tools.merge_pdfs(paths, output='src/level_1/assets/merged.pdf')
+        merge_pdfs(paths, output='src/level_1/assets/merged.pdf')
     except Exception as e:
         print(f"[ERROR](merge_pdfs)--> {e}")
 

@@ -1,5 +1,5 @@
 import os
-from PyPDF2 import PdfReader, PdfMerger
+from PyPDF2 import PdfReader, PdfMerger, PdfWriter
 
 
 def extract_information(pdf_path):
@@ -36,9 +36,26 @@ def merge_pdfs(paths, output):
         merger.append(path)
 
     os.makedirs(os.path.dirname(output), exist_ok=True)
-    
+
     merger.write(output)
     merger.close()
 
     print(f"Merged PDF saved as {output} successfully.")
 
+
+def split_pdf(path, output_folder, page_numbers):
+    """
+    Split a PDF file into individual pages and save them as separate PDF files.
+    """
+    pdf = PdfReader(path)
+    for page_num in page_numbers:
+        pdf_writer = PdfWriter()
+        pdf_writer.add_page(pdf.pages[page_num])
+
+        output_path = f"{output_folder}/page_{page_num+1}.pdf"
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, 'wb') as output_pdf:
+            pdf_writer.write(output_pdf)
+
+    
+    print("\nAll pages splitted successfully.\n")
